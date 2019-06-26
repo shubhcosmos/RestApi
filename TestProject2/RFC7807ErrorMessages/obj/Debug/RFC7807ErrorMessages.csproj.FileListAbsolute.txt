@@ -1,0 +1,13 @@
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\obj\Debug\RFC7807ErrorMessages.csprojAssemblyReference.cache
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\obj\Debug\RFC7807ErrorMessages.csproj.CoreCompileInputs.cache
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\bin\Debug\RFC7807ErrorMessages.xml
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\bin\Debug\RFC7807ErrorMessages.dll
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\bin\Debug\RFC7807ErrorMessages.pdb
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\bin\Debug\Newtonsoft.Json.dll
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\bin\Debug\System.Net.Http.Formatting.dll
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\bin\Debug\System.Web.Http.dll
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\bin\Debug\System.Net.Http.Formatting.xml
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\bin\Debug\System.Web.Http.xml
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\obj\Debug\RFC7807ErrorMessages.csproj.CopyComplete
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\obj\Debug\RFC7807ErrorMessages.dll
+C:\shubh\study\PluralSight\Projects\WebApi\TestProject2\RFC7807ErrorMessages\obj\Debug\RFC7807ErrorMessages.pdb

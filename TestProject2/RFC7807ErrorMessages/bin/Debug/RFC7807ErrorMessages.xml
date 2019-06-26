@@ -1,0 +1,280 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RFC7807ErrorMessages</name>
+    </assembly>
+    <members>
+        <member name="T:RFC7807ErrorMessages.RFC7807Exception">
+            <summary>
+            Exception class that holds RFC7807 problem detail information
+            </summary>
+        </member>
+        <member name="F:RFC7807ErrorMessages.RFC7807Exception.ModelErrorOccurred">
+            <summary>
+            Generic error message for model state validation errors when no
+            other explicit error message is present in the model state dictionary.
+            </summary>
+        </member>
+        <member name="F:RFC7807ErrorMessages.RFC7807Exception.TypeUriAuthority">
+            <summary>
+            Set the base URI for any calculated Type URIs; used
+            when an RFC7807Exception is created based on a System.Exception
+            so no problem detail is present, and the problem type URI must
+            be calculated from the source exception type name.
+            </summary>
+            <example>
+            <code>
+            RFC7807Exception.TypeUriAuthority = "https://example.com/probs/";
+            </code>
+            </example>
+        </member>
+        <member name="F:RFC7807ErrorMessages.RFC7807Exception.ProblemDetail">
+            <summary>
+            Holds the problem detail associated with this exception
+            </summary>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807Exception.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            Constructor needing only an HttpStatusCode. 
+            </summary>
+            <remarks>
+            The instance returned meets the requirements but not necessarily the intent 
+            of RFC7807 so you should really only use this version when you plan to flesh
+            out the <see cref="F:RFC7807ErrorMessages.RFC7807Exception.ProblemDetail"/> in subsequent code, unless the
+            http status code alone really is completely sufficient to describe the problem.
+            </remarks>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807Exception.#ctor(RFC7807ErrorMessages.RFC7807ProblemDetail)">
+            <summary>
+            Constructor taking an RFC7807ProblemDetail instance.  
+            </summary>
+            <remarks>
+            This is the best general constructor to use, as it gives you explicit control over
+            the problem info directly in RFC7807 form.
+            </remarks>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807Exception.#ctor(System.Web.ModelBinding.ModelStateDictionary,System.Uri,System.Uri)">
+            <summary>
+            Constructor for converting model validation errors into an RFC7807Exception
+            </summary>
+            <param name="modelState">ModelStateDictionary instance from model validation</param>
+            <param name="typeUri">optional type URI for the problem detail type</param>
+            <param name="instanceUri">optional instance URI for the ProblemDetail</param>
+            <example>
+            <code>
+            if (!ModelState.IsValid)
+            {
+                throw new RFC7807Exception(ModelState);
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807Exception.#ctor(System.Exception,System.Uri)">
+            <summary>
+            Constructor taking any Exception instance (including derived subclasses),
+            and optionally an instance URI (perhaps the request URI) that will be 
+            stored to the Instance field, and retrieves
+            RFC7807 problem detail from the exception data.  
+            </summary>
+            <remarks>
+            The resulting instance will have an http status code of either 500,
+            or 501 for a NotImplementedException. 
+            </remarks>
+        </member>
+        <member name="P:RFC7807ErrorMessages.RFC7807Exception.Message">
+            <summary>
+            Override the default Exception.Message to narrowly scope the
+            message down to the Detail or Title values
+            </summary>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807Exception.op_Implicit(RFC7807ErrorMessages.RFC7807Exception)~RFC7807ErrorMessages.RFC7807ProblemDetail">
+            <summary>
+            Implicit cast operator to get an RFCProblemDetail from an RFC7807Exception
+            </summary>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807Exception.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Required method for ISerializble, ensures ProblemDetail is serialized
+            </summary>
+        </member>
+        <member name="T:RFC7807ErrorMessages.RFC7807ExceptionFilterAttribute">
+            <summary>
+            Web API 2.x exception filter to output valid RFC7807 data to the caller for an exception
+            </summary>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807ExceptionFilterAttribute.OnExceptionAsync(System.Web.Http.Filters.HttpActionExecutedContext,System.Threading.CancellationToken)">
+            <summary>
+            Required method for exception filters
+            </summary>
+        </member>
+        <member name="T:RFC7807ErrorMessages.RFC7807GlobalExceptionHandler">
+            <summary>
+            Global exception handler to convert all exceptions into RFC7807 messages as the response
+            </summary>
+            <remarks>
+            To register, in WebApiConfig.cs:
+            <code>
+            config.Services.Replace(typeof(IExceptionHandler), new RFC7807GlobalExceptionHandler());
+            </code>
+            </remarks>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807GlobalExceptionHandler.HandleAsync(System.Web.Http.ExceptionHandling.ExceptionHandlerContext,System.Threading.CancellationToken)">
+            <summary>
+            Required method for a web api global exception handler
+            </summary>
+        </member>
+        <member name="T:RFC7807ErrorMessages.RFC7807Media">
+            <summary>
+            Static utility methods to handle RFC7807 media types and media type formatters
+            </summary>
+        </member>
+        <member name="F:RFC7807ErrorMessages.RFC7807Media.ProblemXmlMediaType">
+            <summary>
+            RFC7807 media type for problem detail in XML
+            </summary>
+        </member>
+        <member name="F:RFC7807ErrorMessages.RFC7807Media.ProblemJsonMediaType">
+            <summary>
+            RFC7807 media type for problem detail in JSON
+            </summary>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807Media.GetRFC7807ContentTypeForRequest(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Get the proper response media type for the incoming request media type
+            </summary>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807Media.GetMediaTypeFormatterForResponseType(System.Web.Http.HttpConfiguration,System.String)">
+            <summary>
+            return the formatter instance from the HttpConfiguration to use for the 
+            given RFC7807 media content type string
+            </summary>
+        </member>
+        <member name="T:RFC7807ErrorMessages.RFC7807ProblemDetail">
+            <summary>
+            Core data structure for holding RFC 7807 problem detail information
+            </summary>
+        </member>
+        <member name="F:RFC7807ErrorMessages.RFC7807ProblemDetail.DefaultType">
+            <summary>
+            The default "type" value if not explicitly set.  According to the RFC,
+            this is mainly intended for scenarios where the "status" HTTP status code 
+            is sufficient to explain the problem.
+            </summary>
+        </member>
+        <member name="P:RFC7807ErrorMessages.RFC7807ProblemDetail.Type">
+            <summary>
+            From RFC7807:
+            A URI reference [RFC3986] that identifies the
+            problem type. This specification encourages that, when
+            dereferenced, it provide human-readable documentation for the
+            problem type (e.g., using HTML [W3C.REC-html5-20141028]).  When
+            this member is not present, its value is assumed to be "about:blank".
+            </summary>
+            <remarks>
+            Except for the sole case where the HTTP status code is the only
+            information being given, you should consider the Type property 
+            as a required element since this _is_ the machine-readable problem 
+            description. This is also the namespace for extensions, i.e.
+            an extension member name is specific to the problem Type value.
+            </remarks>
+        </member>
+        <member name="P:RFC7807ErrorMessages.RFC7807ProblemDetail.Title">
+            <summary>
+            From RFC7807:
+            A short, human-readable summary of the problem
+            type. It SHOULD NOT change from occurrence to occurrence of the
+            problem, except for purposes of localization (e.g., using
+            proactive content negotiation; see[RFC7231], Section 3.4).
+            </summary>
+        </member>
+        <member name="P:RFC7807ErrorMessages.RFC7807ProblemDetail.Status">
+            <summary>
+            From RFC7807:
+            The HTTP status code ([RFC7231], Section 6)
+            generated by the origin server for this occurrence of the problem.
+            </summary>
+            <remarks>
+            Setting the original http status in the problem data means the caller
+            can still retrieve it even if any intermediate proxies have
+            stripped off the original status code from the response.
+            </remarks>
+        </member>
+        <member name="P:RFC7807ErrorMessages.RFC7807ProblemDetail.Detail">
+            <summary>
+            From RFC7807:
+            A human-readable explanation specific to this occurrence of the problem.
+            If present, ought to focus on helping the client correct the problem, 
+            rather than giving debugging information.
+            </summary>
+        </member>
+        <member name="P:RFC7807ErrorMessages.RFC7807ProblemDetail.Instance">
+            <summary>
+            From RFC7807:
+            A URI reference that identifies the specific occurrence of the problem.
+            It may or may not yield further information if dereferenced.
+            </summary>
+        </member>
+        <member name="P:RFC7807ErrorMessages.RFC7807ProblemDetail.Extensions">
+            <summary>
+            From RFC7807:
+            A problem type definition MAY specify additional members on the
+            problem details object.  For example, an extension might use typed
+            links[RFC5988] to another resource that can be used by machines to
+            resolve the problem.
+            If such additional members are defined, their names SHOULD start with
+            a letter (ALPHA, as per[RFC5234], Appendix B.1) and SHOULD consist
+            of characters from ALPHA, DIGIT([RFC5234], Appendix B.1), and "_"
+            (so that it can be serialized in formats other than JSON), and they
+            SHOULD be three characters or longer.
+            </summary>
+            <remarks>
+            In this implementation, all custom extensions will appear as children 
+            under a parent property named "extensions". Example:
+            "extensions": {
+                "balance": 30,
+                "accounts": [
+                    "/account/12345",
+                    "/account/67890"
+                ]
+            }
+            </remarks>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807ProblemDetail.#ctor">
+            <summary>
+            Default constructor for when you plan to build up the object
+            manually.
+            </summary>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807ProblemDetail.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            Constructor taking only the HTTP status code, and setting Type and Title
+            to appropriate values per the RFC
+            </summary>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807ProblemDetail.#ctor(System.Net.HttpStatusCode,System.Uri)">
+            <summary>
+            Minimal constructor taking only the HTTP status code and the Type URI
+            </summary>
+        </member>
+        <member name="T:RFC7807ErrorMessages.RFC7807RequestMessageExtensions">
+            <summary>
+            HttpRequestMessage extensions for creating RFC7807 problem detail responses
+            </summary>
+            <remarks>
+            Note that the implicit conversion operator on RFC7807Exception means any method
+            in this class that takes an RFC7807ProblemDetail will also accept an
+            RFC7807Exception instance as well.
+            </remarks>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807RequestMessageExtensions.CreateRFC7807ProblemResponse(System.Net.Http.HttpRequestMessage,RFC7807ErrorMessages.RFC7807ProblemDetail)">
+            <summary>
+            Create an HttpResponseMessage given an RFC7807ProblemDetail instance
+            </summary>
+        </member>
+        <member name="M:RFC7807ErrorMessages.RFC7807RequestMessageExtensions.CreateRFC7807ProblemActionResult(System.Net.Http.HttpRequestMessage,RFC7807ErrorMessages.RFC7807ProblemDetail)">
+            <summary>
+            Create an IHttpActionResult given an RFC7807ProblemDetail instance
+            </summary>
+        </member>
+    </members>
+</doc>
